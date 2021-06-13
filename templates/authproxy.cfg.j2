@@ -1,0 +1,146 @@
+{% if adclient is defined %}
+
+[ad_client]
+host={{ adclient_host }}
+{% if adclient_host1 is defined %}
+host_1={{ adclient_host1 }}
+{% endif %}
+{% if adclient_host2 is defined %}
+host_2={{ adclient_host2 }}
+{% endif %}
+{% if adclient_host3 is defined %}
+host_3={{ adclient_host3 }}
+{% endif %}
+{% if adclient_host4 is defined %}
+host_4={{ adclient_host4 }}
+{% endif %}
+service_account_username={{ adclient_user }}
+service_account_password={{ adclient_pw }}
+search_dn={{ adclient_search_dn }}
+{% if adclient_security_group_dn is defined %}
+security_group_dn={{ adclient_security_group_dn }}
+{% endif %}
+{% if adclient_ldap_filter is defined %}
+ldap_filter={{ adclient_ldap_filter }}
+{% endif %}
+{% if adclient_transport is defined %}
+transport={{ adclient_transport | default(clear) }}
+{% endif %}
+{% if adclient_port is defined %}
+port={{ adclient_port | default(389) }}
+{% endif %}
+{% if adclient_transport is defined %}
+ssl_ca_certs_file ={{ ssl_ca_certs_file }}
+{% endif %}
+{% if ssl_verify_hostname is defined %}
+ssl_verify_hostname={{ ssl_verify_hostname | default(true) }}
+{% endif %}
+{% if ad_timeout is defined %}
+timeout={{ ssl_verify_hostname | default(10) }}
+{% endif %}
+{% if ad_timeout is defined %}
+timeout={{ ssl_verify_hostname | default(10) }}
+{% endif %}
+{% if auth_type is defined %}
+auth_type={{ auth_type | default(ntlm2) }}
+{% endif %}
+{% if auth_type == "plain" %}
+bind_dn={{ bind_dn }}
+{% endif %}
+{% if ntlm_domain is defined %}
+ntlm_domain={{ ntlm_domain }}
+{% endif %}
+{% if ntlm_workstation is defined %}
+ntlm_workstation={{ ntlm_workstation }}
+{% endif %}
+{% if username_attribute is defined %}
+username_attribute={{ username_attribute | default(sAMAccountName)}}
+{% endif %}
+{% if at_attribute is defined %}
+at_attribute={{ at_attribute | default(userPrincipleName)}}
+{% endif %}
+
+{% endif %}
+
+
+
+{% if adsync == true %}
+
+[cloud]
+ikey={{ adsync_ikey }}
+skey={{ adsync_skey }}
+api_host={{ adsync_api_host }}
+service_account_username={{ ldapbind_user }}
+service_account_password={{ ldapbind_pw }}
+
+{% endif %}
+
+{% if radius_client == true %}
+
+[radius_client]
+host={{ radius_host }}
+secret={{ radius_secret }}
+{% if radius_port is defined %}
+port={{ radius_port | default(1812) }}
+{% endif %}
+{% if retry_attempts is defined %}
+retries={{ retry_attempts }}
+{% endif %}
+{% if retry_wait is defined %}
+retry_wait={{ retry_wait }}
+{% endif %}
+{% if nas_ip is defined %}
+nas_ip={{ nas_ip }}
+{% endif %}
+{% if pass_through_attr_names is defined %}
+pass_through_attr_names={{ pass_through_attr_names }}
+{% endif %}
+{% if pass_through_all is defined %}
+pass_through_all={{ pass_through_all }}
+{% endif %}
+{% if pw_codec is defined %}
+pw_codec={{ pw_codec }}
+{% endif %}
+
+{% endif %}
+
+{% if duo_only == "no" %}
+[duo_only_client]
+{% endif %}
+
+{% if radius == true %}
+
+[radius_server_auto]
+ikey={{ radius_ikey }}
+skey={{ radius_skey }}
+api_host={{ radius_api_host }}
+failmode={{ radius_failmode }}
+client=ad_client
+{% for client_set in radius_clients %}
+radius_ip_{{ loop.index }}={{ client_set.ip }}
+radius_secret_{{ loop.index }}={{ client_set.secret }}
+{% endfor %}
+# delimiter=,
+# allow_concat=true
+# port=1812
+{% endif %}
+
+
+{% if ldap == true %}
+
+[ldap_server_auto]
+client=ad_client
+ikey={{ ldap_ikey }}
+skey={{ ldap_skey }}
+api_host={{ ldap_api_host }}
+failmode={{ ldap_failmode }}
+# delimiter=,
+# allow_concat=true
+# port=389
+# api_timeout=0
+# ssl_port=636
+# ssl_key_path=/srv/duoauth_key.pem
+# ssl_cert_path=/srv/duoauth_cert.pem
+# allow_searches_after_bind=true
+
+{% endif %}

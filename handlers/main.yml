@@ -1,0 +1,6 @@
+---
+# handlers file for duo_authentication_proxy
+- name: restart duoauthproxy
+  service:
+    name: duoauthproxy
+    state: restarted

@@ -1,0 +1,74 @@
+---
+# defaults file for duo_authentication_proxy
+# Here belong all variables, that can be changed by a vars-file,
+# a playbook or a include.
+
+
+
+# This section connects to the Active Directory, to sync users to the duo cloud
+adsync: yes
+adsync_ikey: "DIXXXXXXXXXXXXXXXXXX"
+adsync_skey: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+adsync_api_host: "api-XXXXXXXX.duosecurity.com"
+ldapbind_user: "LDAP USER"
+ldapbind_pw: "LDAP PASSWORD"
+
+
+
+# This section connects to the Active Directory, to authenticate logins
+adclient: "yes"
+adclient_host: "example.com/IP"
+adclient_host2: "example.com/IP"
+adclient_host3: "example.com/IP"
+adclient_host4: "example.com/IP"
+adclient_user: "USER"
+adclient_pw: "PASSWORD"
+adclient_search_dn: "DC=example,DC=com"
+auth_type: "ntlm2"
+#duo_adclient_port: "389"
+#duo_ssl_verify_hostname: "false"
+#duo_ssl_ca_certs_file: "path_to_ca_certs_file"
+#duo_adclient_security_group_dn: "CN=DuoVPNUsers,OU=Groups,DC=example,DC=com"
+#duo_adclient_transport: starttls
+#duo_ldap_filter={{ ldap_filter_expression }}
+#duo_ad_timeout: "10"
+#duo_bind_dn: "service_account_dn"
+#duo_ntlm_domain: "distinguished name of authproxy host"
+#duo_ntlm_workstation: "name of workstation"
+#username_attribute: "sAMAccountName"
+#at_attribute: "userPrincipalName"
+
+
+# This section connects to a RADIUS server for primary authentication
+radius_client: "no"
+radius_host: "hostname/IP"
+radius_secret: "radius_shared_secret"
+#port: "1812"
+#retries: "3"
+#retry_wait: "2"
+#nas_ip: "authproxy_reporting_ip"
+#pass_through_attr_names: "comma seperated list of attributes"
+#pass_through_all: "false"
+#pw_codec: "UTF-8"
+
+# This section defines a duo_only_client
+duo_only: "no"
+
+# This section sets up the radius proxy
+radius: yes
+radius_ikey: "DIXXXXXXXXXXXXXXXXXX"
+radius_skey: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+radius_api_host: "api-XXXXXXXX.duosecurity.com"
+radius_failmode: safe # safe = if duo is offline, will let user login // secure = if duo offline, will deny logins
+radius_clients: # from which IPs can you do a radius authentification with what secret // IP ranges possible // multille sets possible
+  - ip: 10.0.0.0/8
+    secret: "thisisalsoaradiussecret"
+
+
+# This section sets up the ldap proxy
+ldap: no
+ldap_ikey: "DIXXXXXXXXXXXXXXXXXX"
+ldap_skey: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+ldap_api_host: "api-XXXXXXXX.duosecurity.com"
+ldap_failmode: safe # safe = if duo is offline, will let user login // secure = if duo offline, will deny logins
+

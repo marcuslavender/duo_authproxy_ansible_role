@@ -1,0 +1,13 @@
+---
+
+- name: deploy config
+  template:
+    src: templates/authproxy.cfg.j2
+    dest: "{{ duo_config_file }}"
+  notify: restart duoauthproxy
+
+- name: start and enable duo
+  systemd:
+    name: duoauthproxy
+    state: started
+    enabled: yes

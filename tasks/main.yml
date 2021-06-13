@@ -1,0 +1,103 @@
+---
+# tasks file for duo_authentication_proxy
+
+# install Duo authentication Proxy prerequisites
+
+- name: "Perform system checks"
+  include_tasks: systemcheck.yml
+
+- name: "Install Duo authentication Proxy prerequisites Debian/ubuntu"
+  become: True
+  apt:
+    name:
+      - build-essential
+      - libffi-dev
+      - perl
+      - zlib1g-dev
+      - virtualenv
+      - pip3
+      - setuptools
+    state: present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+
+- name: "Install Duo authentication Proxy prerequisites Centos/Redhat"
+  become: True
+  yum:
+    name:
+      - gcc
+      - make
+      - libffi-devel
+      - perl
+      - zlib-devel
+      - diffutils
+      - virtualenv
+      - python3-pip
+      - python3-setuptools
+    state: present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: "test"
+  debug:
+    msg: "{{ config_update_only }}"
+
+- name: "Get authentication proxy installation files"
+  shell: wget https://dl.duosecurity.com/duoauthproxy-latest-src.tgz
+  args:
+    chdir: "{{ duo_download_tmp }}"
+    creates: duoauthproxy-latest-src.tgz
+  when: config_update_only  != True
+
+
+- name: "Extract tar file"
+  shell: tar xzf duoauthproxy-latest-src.tgz
+  args:
+    chdir: "{{ duo_download_tmp }}"
+    creates: duoauthproxy-latest-src
+  when: config_update_only  != True
+
+
+- name: "Get exact version info"
+  shell: ls  | grep duoauthproxy-{{ version }} | awk -F '-' '{print $3}'
+  args:
+    chdir: "{{ duo_download_tmp }}"
+  register: subversion
+  when: config_update_only  != True
+
+
+
+- name: "change into extract DIR and build"
+  shell: make
+  args:
+    chdir: "{{ duo_download_tmp }}duoauthproxy-{{ version }}-{{ subversion.stdout }}-src/"
+  when: config_update_only  != True
+
+
+- name: "install authentication proxy"
+  shell:
+    cmd: ./install --install-dir {{ install_dir }} --service-user {{ service_user }} --log-group {{ log_read_group }} --create-init-script yes
+    chdir: "{{ duo_download_tmp }}duoauthproxy-{{ version }}-{{ subversion.stdout }}-src/duoauthproxy-build/"
+  register: install_authentication_proxy_result
+  failed_when: "install_authentication_proxy_result.rc != 0 and 'Success' not in install_authentication_proxy_result.stdout"
+  changed_when: "install_authentication_proxy_result.rc == 0"
+  when: config_update_only  != True
+
+
+- name: remove source
+  file:
+    path: "{{ duo_download_tmp }}duoauthproxy-{{ version }}-{{ subversion.stdout }}-src"
+    state: absent
+  when: config_update_only  != True
+
+- name: remove source
+  file:
+    path: "{{ duo_download_tmp }}duoauthproxy-latest-src.tgz"
+    state: absent
+  when: config_update_only  != True
+
+- name: "deploy authproxy.cfg"
+  include_tasks: deploy_config.yml
+
+
+
+
