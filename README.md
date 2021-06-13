@@ -1,13 +1,12 @@
-Role Name
+Duo Authpropxy
 =========
 
-A brief description of the role goes here.
+Deploys the Duo authentocation proxy  and configures using Ansible for Linux Debian and RHEL based hosts.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the
-role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+None
 
 Role Variables
 --------------
@@ -17,11 +16,13 @@ defaults/main.yml, vars/main.yml, and any variables that can/should be set via p
 that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as
 well.
 
+defaults/main.yml - contains the authproxy  configuration file variables to configure the authproxy.cfg file as required.
+Change the variables contained here as needed to configure thre proxy for your environment
+
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set
-for other roles, or variables that are used from other roles.
+None
 
 Example Playbook
 ----------------
@@ -29,16 +30,20 @@ Example Playbook
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for
 users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+- name: "apply authproxy role"
+  hosts: all 
+  become: true
+  roles:
+   - duo_authentication_proxy
+
 
 License
 -------
 
-BSD
+ GNU GENERAL PUBLIC LICENSE
+ Version 3, 29 June 2007
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Marcus Lavender. - mlavender@duosecurity.com.
