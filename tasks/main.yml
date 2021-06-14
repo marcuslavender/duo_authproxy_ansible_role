@@ -37,9 +37,12 @@
     state: present
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
-- name: "test"
-  debug:
-    msg: "{{ config_update_only }}"
+- name: "Update Firewall rules"
+  ansible.posix.firewalld:
+    port: "{{ item.port }}/{{ item.protocol }}"
+    permanent: yes
+    state:  enabled
+  with_items: "{{ role_ports }}"
 
 - name: "Get authentication proxy installation files"
   shell: wget https://dl.duosecurity.com/duoauthproxy-latest-src.tgz
