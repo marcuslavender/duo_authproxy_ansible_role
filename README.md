@@ -6,7 +6,7 @@ Deploys the Duo authentocation proxy  and configures using Ansible for Linux Deb
 Requirements
 ------------
 
-None
+Debian or RHEL based Linux host server 
 
 Role Variables
 --------------
