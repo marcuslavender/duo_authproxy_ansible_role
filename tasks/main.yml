@@ -18,9 +18,6 @@
       - libffi-dev
       - perl
       - zlib1g-dev
-      - virtualenv
-      - pip3
-      - setuptools
     state: present
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
@@ -35,19 +32,25 @@
       - perl
       - zlib-devel
       - diffutils
-      - virtualenv
-      - python3-pip
-      - python3-setuptools
     state: present
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
-- name: "Update Firewall rules"
+- name: "Update Firewall rules - Centos"
   ansible.posix.firewalld:
     port: "{{ item.port }}/{{ item.protocol }}"
     permanent: yes
     state:  enabled
   with_items: "{{ role_ports }}"
-  when: config_update_only  != "true"
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' and config_update_only  != "true"
+
+- name: "Update Firewall rules - ubuntu"
+  community.general.ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.protocol }}"
+    state:  enabled
+  with_items: "{{ role_ports }}"
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' and config_update_only  != "true"
 
 - name: "Get authentication proxy installation files"
   shell: wget https://dl.duosecurity.com/duoauthproxy-latest-src.tgz
