@@ -6,6 +6,10 @@
 - name: "Perform system checks"
   include_tasks: systemcheck.yml
 
+- name: "Config_update_only"
+  debug:
+      msg: "{{ config_update_only }}"
+
 - name: "Install Duo authentication Proxy prerequisites Debian/ubuntu"
   become: True
   apt:
@@ -43,13 +47,14 @@
     permanent: yes
     state:  enabled
   with_items: "{{ role_ports }}"
+  when: config_update_only  != "true"
 
 - name: "Get authentication proxy installation files"
   shell: wget https://dl.duosecurity.com/duoauthproxy-latest-src.tgz
   args:
     chdir: "{{ duo_download_tmp }}"
     creates: duoauthproxy-latest-src.tgz
-  when: config_update_only  != True
+  when: config_update_only  != "true"
 
 
 - name: "Extract tar file"
@@ -57,7 +62,7 @@
   args:
     chdir: "{{ duo_download_tmp }}"
     creates: duoauthproxy-latest-src
-  when: config_update_only  != True
+  when: config_update_only  != "true"
 
 
 - name: "Get exact version info"
@@ -65,7 +70,7 @@
   args:
     chdir: "{{ duo_download_tmp }}"
   register: subversion
-  when: config_update_only  != True
+  when: config_update_only  != "true"
 
 
 
@@ -73,7 +78,7 @@
   shell: make
   args:
     chdir: "{{ duo_download_tmp }}duoauthproxy-{{ version }}-{{ subversion.stdout }}-src/"
-  when: config_update_only  != True
+  when: config_update_only  != "true"
 
 
 - name: "install authentication proxy"
@@ -83,20 +88,20 @@
   register: install_authentication_proxy_result
   failed_when: "install_authentication_proxy_result.rc != 0 and 'Success' not in install_authentication_proxy_result.stdout"
   changed_when: "install_authentication_proxy_result.rc == 0"
-  when: config_update_only  != True
+  when: config_update_only  != "true"
 
 
 - name: remove source
   file:
     path: "{{ duo_download_tmp }}duoauthproxy-{{ version }}-{{ subversion.stdout }}-src"
     state: absent
-  when: config_update_only  != True
+  when: config_update_only  != "true"
 
 - name: remove source
   file:
     path: "{{ duo_download_tmp }}duoauthproxy-latest-src.tgz"
     state: absent
-  when: config_update_only  != True
+  when: config_update_only  != "true"
 
 - name: "deploy authproxy.cfg"
   include_tasks: deploy_config.yml

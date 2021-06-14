@@ -31,5 +31,5 @@ install_dir: /opt/duoauthproxy
 service_user: duo_authproxy_svc
 log_read_group: duo_authproxy_grp
 create_initialization_script: yes
-config_update_only: False
+config_update_only: "true"
 duo_config_file: /opt/duoauthproxy/conf/authproxy.cfg
