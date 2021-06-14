@@ -22,7 +22,7 @@ Change the variables contained here as needed to configure thre proxy for your e
 Dependencies
 ------------
 
-None
+ansible-galaxy collection install community.general
 
 Example Playbook
 ----------------
