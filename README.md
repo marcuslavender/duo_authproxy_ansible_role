@@ -1,4 +1,4 @@
-Duo Authpropxy
+Duo Authproxy
 =========
 
 Deploys the Duo authentication proxy  and configures using Ansible for Linux Debian and RHEL based hosts.
