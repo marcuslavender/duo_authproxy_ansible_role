@@ -1,7 +1,7 @@
 Duo Authpropxy
 =========
 
-Deploys the Duo authentocation proxy  and configures using Ansible for Linux Debian and RHEL based hosts.
+Deploys the Duo authentication proxy  and configures using Ansible for Linux Debian and RHEL based hosts.
 
 Requirements
 ------------
@@ -17,7 +17,7 @@ that are read from other roles and/or the global scope (ie. hostvars, group vars
 well.
 
 defaults/main.yml - contains the authproxy  configuration file variables to configure the authproxy.cfg file as required.
-Change the variables contained here as needed to configure thre proxy for your environment
+Change the variables contained here as needed to configure the proxy for your environment
 
 Dependencies
 ------------
