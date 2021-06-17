@@ -1,3 +1,4 @@
+```
 Duo Authproxy
 =========
 
@@ -36,9 +37,9 @@ users too:
   roles:
    - duo_authentication_proxy
 
-Note: If you wish to use the role to push out a config change, you can pass the -e --extra-vars ansible option as below:
+Note: If you wish to use the role to push out a config change, you can pass the `-e --extra-vars` ansible option as below:
 
- -e config_update_only=true
+ `-e config_update_only=true`
 
 License
 -------
@@ -50,3 +51,4 @@ Author Information
 ------------------
 
 Marcus Lavender. - mlavender@duosecurity.com.
+```
